@@ -2,11 +2,13 @@ export default function Header({ search, onSearch, theme, onToggleTheme, onOpenD
   return (
     <header className="header">
       <div className="header-inner">
-        <div className="logo">
-          <span className="logo-icon">📡</span>
-          <span className="logo-text">BlogFeed</span>
-          <span className="logo-sub">AI · ML · Software Engineering</span>
-        </div>
+        <a className="logo" href="/">
+          <div className="logo-icon-wrap">📡</div>
+          <div className="logo-text-wrap">
+            <span className="logo-text">ByteFeed</span>
+            <span className="logo-sub">AI · ML · Engineering</span>
+          </div>
+        </a>
 
         <div className="header-actions">
           <div className="search-wrap">
@@ -26,20 +28,12 @@ export default function Header({ search, onSearch, theme, onToggleTheme, onOpenD
 
           <button className="icon-btn" onClick={() => onOpenDrawer("bookmarks")} title="Bookmarks">
             🔖
-            {bookmarkCount > 0 && (
-              <span style={{ fontSize: 9, position: "absolute", top: 4, right: 4, background: "#6366f1", color: "#fff", borderRadius: "50%", width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {bookmarkCount}
-              </span>
-            )}
+            {bookmarkCount > 0 && <span className="badge">{bookmarkCount}</span>}
           </button>
 
           <button className="icon-btn" onClick={() => onOpenDrawer("readlater")} title="Read Later">
             🕐
-            {readLaterCount > 0 && (
-              <span style={{ fontSize: 9, position: "absolute", top: 4, right: 4, background: "#f59e0b", color: "#fff", borderRadius: "50%", width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {readLaterCount}
-              </span>
-            )}
+            {readLaterCount > 0 && <span className="badge">{readLaterCount}</span>}
           </button>
         </div>
       </div>

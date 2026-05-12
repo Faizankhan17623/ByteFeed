@@ -8,33 +8,33 @@ export default function SourcesPage({ posts }) {
 
   return (
     <div>
-      <div style={{ marginBottom: 20 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>
-          All Sources
-        </h2>
-        <p style={{ fontSize: 13, color: "var(--text3)" }}>
-          {feeds.length} blogs being aggregated
-        </p>
+      <div className="sources-header">
+        <h2>All Sources</h2>
+        <p>{feeds.length} blogs being tracked — updated in real time via RSS</p>
       </div>
 
       <div className="sources-grid">
         {feeds.map((feed) => (
-          <div key={feed.name} className="source-card">
+          <div key={feed.name} className="source-card" style={{ "--source-color": feed.color }}>
             <div className="source-card-top">
-              <span className="source-color-dot" style={{ background: feed.color }} />
-              <span className="source-card-name">{feed.name}</span>
+              <div className="source-color-bar" style={{ background: feed.color }} />
+              <div className="source-card-info">
+                <span className="source-card-name">{feed.name}</span>
+                <span className="source-card-cat">{feed.category}</span>
+              </div>
             </div>
-            <span className="source-card-cat">{feed.category}</span>
+
             <div className="source-card-count">
               <strong>{countBySource[feed.name] || 0}</strong> posts loaded
             </div>
+
             <a
-              href={feed.url}
+              href={feed.siteUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="source-card-link"
             >
-              RSS Feed ↗
+              Visit Blog ↗
             </a>
           </div>
         ))}

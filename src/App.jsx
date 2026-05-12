@@ -8,6 +8,7 @@ import PostCard from "./components/PostCard";
 import SkeletonCard from "./components/SkeletonCard";
 import Drawer from "./components/Drawer";
 import SourcesPage from "./components/SourcesPage";
+import feeds from "./feeds";
 import "./App.css";
 
 const PAGE_SIZE = 12;
@@ -30,7 +31,6 @@ export default function App() {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  // reset page when filters change
   useEffect(() => { setPage(1); }, [search, category, activeSources]);
 
   const filtered = useMemo(() => {
@@ -65,10 +65,10 @@ export default function App() {
     const exists = bookmarks.find((b) => b.id === post.id);
     if (exists) {
       setBookmarks(bookmarks.filter((b) => b.id !== post.id));
-      showToast("Bookmark removed");
+      showToast("✓ Bookmark removed");
     } else {
       setBookmarks([post, ...bookmarks]);
-      showToast("Bookmarked!");
+      showToast("🔖 Bookmarked!");
     }
   }
 
@@ -76,16 +76,18 @@ export default function App() {
     const exists = readLater.find((b) => b.id === post.id);
     if (exists) {
       setReadLater(readLater.filter((b) => b.id !== post.id));
-      showToast("Removed from Read Later");
+      showToast("✓ Removed from Read Later");
     } else {
       setReadLater([post, ...readLater]);
-      showToast("Saved to Read Later!");
+      showToast("🕐 Saved to Read Later!");
     }
   }
 
   function handleShare(post) {
-    navigator.clipboard.writeText(post.link).then(() => showToast("Link copied!"));
+    navigator.clipboard.writeText(post.link).then(() => showToast("🔗 Link copied!"));
   }
+
+  const uniqueSources = new Set(posts.map((p) => p.source)).size;
 
   return (
     <div className="app">
@@ -99,15 +101,43 @@ export default function App() {
         readLaterCount={readLater.length}
       />
 
+      {/* Hero Banner */}
+      <div className="hero-banner">
+        <div className="hero-inner">
+          <div className="hero-tag">✦ Updated in real time</div>
+          <h1 className="hero-title">
+            The Best of <span>AI, ML &</span><br />Software Engineering
+          </h1>
+          <p className="hero-desc">
+            One place for the latest posts from the world's top technical blogs.
+            No noise, no ads — just great content.
+          </p>
+          <div className="hero-stats">
+            <div className="hero-stat">
+              <span className="hero-stat-num">{feeds.length}</span>
+              <span className="hero-stat-label">Sources</span>
+            </div>
+            <div className="hero-stat">
+              <span className="hero-stat-num">{loading ? "..." : posts.length}</span>
+              <span className="hero-stat-label">Posts</span>
+            </div>
+            <div className="hero-stat">
+              <span className="hero-stat-num">Free</span>
+              <span className="hero-stat-label">Always</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <main className="main">
         <div className="nav-tabs">
-          {[["feed", "📰 Feed"], ["sources", "🌐 Sources"]].map(([key, label]) => (
+          {[["feed", "📰", "Feed"], ["sources", "🌐", "Sources"]].map(([key, icon, label]) => (
             <button
               key={key}
               className={`nav-tab ${tab === key ? "active" : ""}`}
               onClick={() => setTab(key)}
             >
-              {label}
+              {icon} {label}
             </button>
           ))}
         </div>
@@ -125,13 +155,22 @@ export default function App() {
             />
 
             <div className="stats-bar">
-              <span>
-                Showing <strong>{paginated.length}</strong> of <strong>{filtered.length}</strong> posts
-                from <strong>{new Set(filtered.map((p) => p.source)).size}</strong> sources
-              </span>
-              <div className="view-toggle">
-                <button className={`view-btn ${view === "grid" ? "active" : ""}`} onClick={() => setView("grid")} title="Grid view">⊞</button>
-                <button className={`view-btn ${view === "list" ? "active" : ""}`} onClick={() => setView("list")} title="List view">☰</button>
+              <div className="stats-left">
+                <span className="stats-text">
+                  Showing <strong>{paginated.length}</strong> of <strong>{filtered.length}</strong> posts
+                </span>
+                {!loading && (
+                  <div className="stats-pill">
+                    <span className="stats-pill-dot" />
+                    {uniqueSources} sources live
+                  </div>
+                )}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div className="view-toggle">
+                  <button className={`view-btn ${view === "grid" ? "active" : ""}`} onClick={() => setView("grid")} title="Grid view">⊞</button>
+                  <button className={`view-btn ${view === "list" ? "active" : ""}`} onClick={() => setView("list")} title="List view">☰</button>
+                </div>
               </div>
             </div>
 
@@ -141,15 +180,18 @@ export default function App() {
               </div>
             )}
 
-            {error && <div className="status error">{error}</div>}
+            {error && (
+              <div className="status error">
+                <span className="status-icon">⚠️</span>
+                <p>Failed to load feeds. Please try again.</p>
+              </div>
+            )}
 
             {!loading && !error && filtered.length === 0 && (
               <div className="status">
-                <span style={{ fontSize: 36 }}>🔍</span>
+                <span className="status-icon">🔍</span>
                 <p>No posts found. Try adjusting your filters.</p>
-                <button className="clear-filters" onClick={clearAll} style={{ fontSize: 14, padding: "8px 16px", border: "1px solid var(--border)", borderRadius: 8 }}>
-                  Clear all filters
-                </button>
+                <button className="status-action" onClick={clearAll}>Clear all filters</button>
               </div>
             )}
 
@@ -173,7 +215,7 @@ export default function App() {
             {!loading && hasMore && (
               <div className="load-more-wrap">
                 <button className="load-more-btn" onClick={() => setPage((p) => p + 1)}>
-                  Load more posts
+                  Load more posts ↓
                 </button>
               </div>
             )}
@@ -187,15 +229,26 @@ export default function App() {
           onClose={() => setDrawerOpen(null)}
           bookmarks={bookmarks}
           readLater={readLater}
-          onRemoveBookmark={(id) => { setBookmarks(bookmarks.filter((b) => b.id !== id)); showToast("Removed"); }}
-          onRemoveReadLater={(id) => { setReadLater(readLater.filter((b) => b.id !== id)); showToast("Removed"); }}
+          onRemoveBookmark={(id) => { setBookmarks(bookmarks.filter((b) => b.id !== id)); showToast("✓ Removed"); }}
+          onRemoveReadLater={(id) => { setReadLater(readLater.filter((b) => b.id !== id)); showToast("✓ Removed"); }}
         />
       )}
 
       {toast && <div className="toast">{toast}</div>}
 
       <footer className="footer">
-        <p>BlogFeed — Aggregating the best of AI, ML & Software Engineering · {new Set(posts.map(p => p.source)).size} sources · {posts.length} posts</p>
+        <div className="footer-inner">
+          <div className="footer-logo">
+            <div className="footer-logo-icon">📡</div>
+            <span className="footer-logo-text">ByteFeed</span>
+          </div>
+          <span className="footer-text">
+            Aggregating {feeds.length} top blogs · {posts.length} posts loaded · Updated live
+          </span>
+          <div className="footer-links">
+            <a href="https://github.com/Faizankhan17623/ByteFeed" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub ↗</a>
+          </div>
+        </div>
       </footer>
     </div>
   );
