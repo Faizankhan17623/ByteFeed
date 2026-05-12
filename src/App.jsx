@@ -11,6 +11,7 @@ import SourcesPage from "./components/SourcesPage";
 import TrendingSection from "./components/TrendingSection";
 import BackToTop from "./components/BackToTop";
 import KeyboardShortcuts from "./components/KeyboardShortcuts";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 import feeds from "./feeds";
 import "./App.css";
 
@@ -31,6 +32,7 @@ export default function App() {
   const [readLater, setReadLater] = useLocalStorage("readLater", []);
   const { toast, showToast } = useToast();
   const searchRef = useRef(null);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -277,13 +279,21 @@ export default function App() {
             <span className="footer-logo-text">ByteFeed</span>
           </div>
           <span className="footer-text">
-            Made with <span style={{ color: "#f87171" }}>♥</span> by Faizan Khan &nbsp;·&nbsp; {feeds.length} sources &nbsp;·&nbsp; {posts.length} posts
+            Made with <span style={{ color: "#f87171" }}>♥</span> by{" "}
+            <strong style={{ color: "var(--text2)", fontWeight: 800 }}>Faizan Khan</strong>
           </span>
           <div className="footer-links">
-            <a href="https://github.com/Faizankhan17623/ByteFeed" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub ↗</a>
+            <button className="footer-link" onClick={() => setShowPrivacy(true)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}>
+              Privacy Policy
+            </button>
+            <a href="https://github.com/Faizankhan17623/ByteFeed" target="_blank" rel="noopener noreferrer" className="footer-link">
+              GitHub ↗
+            </a>
           </div>
         </div>
       </footer>
+
+      {showPrivacy && <PrivacyPolicy onClose={() => setShowPrivacy(false)} />}
     </div>
   );
 }
