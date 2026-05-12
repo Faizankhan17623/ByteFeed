@@ -1,4 +1,15 @@
-# Logs
+# ── Dependencies ──
+node_modules
+.pnp
+.pnp.js
+
+# ── Build output ──
+dist
+dist-ssr
+build
+out
+
+# ── Logs ──
 logs
 *.log
 npm-debug.log*
@@ -7,21 +18,59 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ── Environment variables (NEVER commit these) ──
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env*.local
 
-# Editor directories and files
+# ── Vercel (DO NOT commit) ──
+.vercel
+
+# ── OS files ──
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Editor files ──
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.swp
+*.swo
+.project
+.classpath
 
-.vercel
-.env*.local
+# ── TypeScript ──
+*.tsbuildinfo
+
+# ── Cache ──
+.cache
+.parcel-cache
+.eslintcache
+.stylelintcache
+.npm
+
+# ── Testing ──
+coverage
+.nyc_output
+
+# ── Misc ──
+*.local
+*.pem
