@@ -671,14 +671,14 @@ a { text-decoration: none; color: inherit; }
 
 /* ── Back to Top ── */
 .back-to-top {
-  position: fixed; bottom: 28px; right: 28px; z-index: 150;
+  position: fixed; right: 28px; z-index: 150;
   width: 44px; height: 44px;
   background: var(--gradient);
   border: none; border-radius: 12px;
   color: #fff; font-size: 20px; font-weight: 700;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 20px var(--glow);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, bottom 0.15s ease;
   animation: fadeUp 0.3s ease;
 }
 .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 8px 28px var(--glow); }
