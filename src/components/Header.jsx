@@ -1,4 +1,4 @@
-export default function Header({ search, onSearch, theme, onToggleTheme, onOpenDrawer, bookmarkCount, readLaterCount }) {
+export default function Header({ search, onSearch, theme, onToggleTheme, onOpenDrawer, bookmarkCount, readLaterCount, searchRef }) {
   return (
     <header className="header">
       <div className="header-inner">
@@ -14,9 +14,10 @@ export default function Header({ search, onSearch, theme, onToggleTheme, onOpenD
           <div className="search-wrap">
             <span className="search-icon">🔍</span>
             <input
+              ref={searchRef}
               className="search-box"
               type="text"
-              placeholder="Search posts, sources..."
+              placeholder="Search posts, sources...  ( / )"
               value={search}
               onChange={(e) => onSearch(e.target.value)}
             />
