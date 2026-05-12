@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
+import confetti from "canvas-confetti";
 import useFeed from "./useFeed";
 import useLocalStorage from "./useLocalStorage";
 import useToast from "./useToast";
@@ -12,6 +13,12 @@ import SourcesPage from "./components/SourcesPage";
 import TrendingSection from "./components/TrendingSection";
 import BackToTop from "./components/BackToTop";
 import KeyboardShortcuts from "./components/KeyboardShortcuts";
+import ReadingProgress from "./components/ReadingProgress";
+import PostModal from "./components/PostModal";
+import NewPostsBanner from "./components/NewPostsBanner";
+import StatsDashboard from "./components/StatsDashboard";
+import WelcomeScreen from "./components/WelcomeScreen";
+import { updateStreak, getStreak } from "./utils/streak";
 import feeds from "./feeds";
 import "./App.css";
 
@@ -27,15 +34,24 @@ export default function App() {
   const [view, setView] = useState("grid");
   const [tab, setTab] = useState("feed");
   const [drawerOpen, setDrawerOpen] = useState(null);
+  const [previewPost, setPreviewPost] = useState(null);
   const [theme, setTheme] = useLocalStorage("theme", "dark");
   const [bookmarks, setBookmarks] = useLocalStorage("bookmarks", []);
   const [readLater, setReadLater] = useLocalStorage("readLater", []);
+  const [hasSeenWelcome, setHasSeenWelcome] = useLocalStorage("bytefeed_welcomed", false);
+  const [streak, setStreak] = useState(0);
   const { toast, showToast } = useToast();
   const searchRef = useRef(null);
+  const firstBookmark = useRef(bookmarks.length === 0);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const s = updateStreak();
+    setStreak(s);
+  }, []);
 
   useEffect(() => { setPage(1); setLoadingMore(false); }, [search, category, activeSources]);
 
@@ -73,6 +89,11 @@ export default function App() {
       setBookmarks(bookmarks.filter((b) => b.id !== post.id));
       showToast("✓ Bookmark removed");
     } else {
+      // First ever bookmark — confetti!
+      if (firstBookmark.current) {
+        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+        firstBookmark.current = false;
+      }
       setBookmarks([post, ...bookmarks]);
       showToast("🔖 Bookmarked!");
     }
@@ -93,6 +114,11 @@ export default function App() {
     navigator.clipboard.writeText(post.link).then(() => showToast("🔗 Link copied!"));
   }
 
+  function handleTwitterShare(post) {
+    const text = encodeURIComponent(`"${post.title}" — via ByteFeed\n${post.link}`);
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
+  }
+
   function handleLoadMore() {
     setLoadingMore(true);
     setTimeout(() => {
@@ -101,10 +127,21 @@ export default function App() {
     }, 800);
   }
 
+  function handleWelcomeDone(selectedTopics) {
+    if (selectedTopics.length > 0) setCategory(selectedTopics[0]);
+    setHasSeenWelcome(true);
+  }
+
   const uniqueSources = new Set(posts.map((p) => p.source)).size;
 
   return (
     <div className="app">
+      <ReadingProgress />
+
+      {!hasSeenWelcome && (
+        <WelcomeScreen onDone={handleWelcomeDone} />
+      )}
+
       <Header
         search={search}
         onSearch={setSearch}
@@ -114,6 +151,7 @@ export default function App() {
         bookmarkCount={bookmarks.length}
         readLaterCount={readLater.length}
         searchRef={searchRef}
+        streak={streak}
       />
 
       {/* Hero Banner */}
@@ -146,7 +184,7 @@ export default function App() {
 
       <main className="main">
         <div className="nav-tabs">
-          {[["feed", "📰", "Feed"], ["sources", "🌐", "Sources"]].map(([key, icon, label]) => (
+          {[["feed", "📰", "Feed"], ["sources", "🌐", "Sources"], ["stats", "📊", "Stats"]].map(([key, icon, label]) => (
             <button
               key={key}
               className={`nav-tab ${tab === key ? "active" : ""}`}
@@ -159,9 +197,12 @@ export default function App() {
 
         {tab === "sources" ? (
           <SourcesPage posts={posts} />
+        ) : tab === "stats" ? (
+          <StatsDashboard posts={posts} bookmarks={bookmarks} />
         ) : (
           <>
-            {/* Trending Section — only show when not filtering */}
+            <NewPostsBanner posts={posts} loading={loading} />
+
             {!loading && category === "All" && activeSources.length === 0 && !search && (
               <TrendingSection posts={posts} />
             )}
@@ -194,7 +235,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Initial loading skeleton */}
             {loading && (
               <div className={`skeleton-grid ${view === "list" ? "grid-list" : ""}`}>
                 {Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} listView={view === "list"} />)}
@@ -228,10 +268,10 @@ export default function App() {
                     onBookmark={toggleBookmark}
                     onReadLater={toggleReadLater}
                     onShare={handleShare}
+                    onTwitterShare={handleTwitterShare}
+                    onPreview={setPreviewPost}
                   />
                 ))}
-
-                {/* Load more skeleton — appended inside the same grid */}
                 {loadingMore && Array.from({ length: 6 }).map((_, i) => (
                   <SkeletonCard key={`more-${i}`} listView={view === "list"} />
                 ))}
@@ -260,6 +300,18 @@ export default function App() {
         />
       )}
 
+      {previewPost && (
+        <PostModal
+          post={previewPost}
+          onClose={() => setPreviewPost(null)}
+          isBookmarked={!!bookmarks.find((b) => b.id === previewPost.id)}
+          isReadLater={!!readLater.find((b) => b.id === previewPost.id)}
+          onBookmark={toggleBookmark}
+          onReadLater={toggleReadLater}
+          onShare={handleShare}
+        />
+      )}
+
       {toast && <div className="toast">{toast}</div>}
 
       <BackToTop />
@@ -283,9 +335,7 @@ export default function App() {
           </span>
           <div className="footer-links">
             <Link to="/privacy" className="footer-link">Privacy Policy</Link>
-            <a href="https://github.com/Faizankhan17623/ByteFeed" target="_blank" rel="noopener noreferrer" className="footer-link">
-              GitHub ↗
-            </a>
+            <a href="https://github.com/Faizankhan17623/ByteFeed" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub ↗</a>
           </div>
         </div>
       </footer>
