@@ -19,6 +19,7 @@ export default function App() {
   const [category, setCategory] = useState("All");
   const [activeSources, setActiveSources] = useState([]);
   const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [view, setView] = useState("grid");
   const [tab, setTab] = useState("feed");
   const [drawerOpen, setDrawerOpen] = useState(null);
@@ -31,7 +32,7 @@ export default function App() {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  useEffect(() => { setPage(1); }, [search, category, activeSources]);
+  useEffect(() => { setPage(1); setLoadingMore(false); }, [search, category, activeSources]);
 
   const filtered = useMemo(() => {
     return posts.filter((p) => {
@@ -85,6 +86,14 @@ export default function App() {
 
   function handleShare(post) {
     navigator.clipboard.writeText(post.link).then(() => showToast("🔗 Link copied!"));
+  }
+
+  function handleLoadMore() {
+    setLoadingMore(true);
+    setTimeout(() => {
+      setPage((p) => p + 1);
+      setLoadingMore(false);
+    }, 800);
   }
 
   const uniqueSources = new Set(posts.map((p) => p.source)).size;
@@ -174,9 +183,10 @@ export default function App() {
               </div>
             </div>
 
+            {/* Initial loading skeleton */}
             {loading && (
-              <div className="skeleton-grid">
-                {Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)}
+              <div className={`skeleton-grid ${view === "list" ? "grid-list" : ""}`}>
+                {Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} listView={view === "list"} />)}
               </div>
             )}
 
@@ -209,12 +219,17 @@ export default function App() {
                     onShare={handleShare}
                   />
                 ))}
+
+                {/* Load more skeleton — appended inside the same grid */}
+                {loadingMore && Array.from({ length: 6 }).map((_, i) => (
+                  <SkeletonCard key={`more-${i}`} listView={view === "list"} />
+                ))}
               </div>
             )}
 
-            {!loading && hasMore && (
+            {!loading && hasMore && !loadingMore && (
               <div className="load-more-wrap">
-                <button className="load-more-btn" onClick={() => setPage((p) => p + 1)}>
+                <button className="load-more-btn" onClick={handleLoadMore}>
                   Load more posts ↓
                 </button>
               </div>
@@ -243,7 +258,7 @@ export default function App() {
             <span className="footer-logo-text">ByteFeed</span>
           </div>
           <span className="footer-text">
-            Aggregating {feeds.length} top blogs · {posts.length} posts loaded · Updated live
+            Made with <span style={{ color: "#f87171" }}>♥</span> by Faizan Khan &nbsp;·&nbsp; {feeds.length} sources &nbsp;·&nbsp; {posts.length} posts
           </span>
           <div className="footer-links">
             <a href="https://github.com/Faizankhan17623/ByteFeed" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub ↗</a>

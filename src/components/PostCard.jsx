@@ -1,7 +1,17 @@
+const CATEGORY_ICONS = {
+  "AI": "🤖",
+  "AI/ML": "🧠",
+  "ML": "📊",
+  "Software Engineering": "⚙️",
+};
+
 export default function PostCard({ post, isBookmarked, isReadLater, onBookmark, onReadLater, onShare, listView }) {
   const date = post.pubDate.toLocaleDateString("en-US", {
     month: "short", day: "numeric", year: "numeric",
   });
+
+  const initial = post.source.charAt(0).toUpperCase();
+  const icon = CATEGORY_ICONS[post.category] || "📄";
 
   return (
     <div className="post-card">
@@ -13,13 +23,29 @@ export default function PostCard({ post, isBookmarked, isReadLater, onBookmark, 
             className="post-thumb"
             onError={(e) => {
               e.target.style.display = "none";
-              e.target.nextSibling && (e.target.nextSibling.style.display = "flex");
+              e.target.nextSibling.style.display = "flex";
             }}
           />
         ) : null}
-        {!post.thumbnail && (
-          <div className="post-thumb-placeholder">📄</div>
-        )}
+        <div
+          className="post-thumb-placeholder"
+          style={{
+            display: post.thumbnail ? "none" : "flex",
+            background: `linear-gradient(135deg, ${post.color}22, ${post.color}55)`,
+            borderBottom: `3px solid ${post.color}`,
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
+          <span style={{ fontSize: 36 }}>{icon}</span>
+          <span style={{
+            fontSize: 11, fontWeight: 700, color: post.color,
+            background: `${post.color}22`, padding: "3px 10px",
+            borderRadius: 20, letterSpacing: 0.5,
+          }}>
+            {post.source}
+          </span>
+        </div>
       </div>
 
       <div className="post-body">
