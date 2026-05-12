@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import useFeed from "./useFeed";
 import useLocalStorage from "./useLocalStorage";
 import useToast from "./useToast";
@@ -8,6 +8,9 @@ import PostCard from "./components/PostCard";
 import SkeletonCard from "./components/SkeletonCard";
 import Drawer from "./components/Drawer";
 import SourcesPage from "./components/SourcesPage";
+import TrendingSection from "./components/TrendingSection";
+import BackToTop from "./components/BackToTop";
+import KeyboardShortcuts from "./components/KeyboardShortcuts";
 import feeds from "./feeds";
 import "./App.css";
 
@@ -27,6 +30,7 @@ export default function App() {
   const [bookmarks, setBookmarks] = useLocalStorage("bookmarks", []);
   const [readLater, setReadLater] = useLocalStorage("readLater", []);
   const { toast, showToast } = useToast();
+  const searchRef = useRef(null);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -108,6 +112,7 @@ export default function App() {
         onOpenDrawer={(t) => setDrawerOpen(t)}
         bookmarkCount={bookmarks.length}
         readLaterCount={readLater.length}
+        searchRef={searchRef}
       />
 
       {/* Hero Banner */}
@@ -155,6 +160,11 @@ export default function App() {
           <SourcesPage posts={posts} />
         ) : (
           <>
+            {/* Trending Section — only show when not filtering */}
+            {!loading && category === "All" && activeSources.length === 0 && !search && (
+              <TrendingSection posts={posts} />
+            )}
+
             <FilterBar
               activeCategory={category}
               onCategory={setCategory}
@@ -250,6 +260,15 @@ export default function App() {
       )}
 
       {toast && <div className="toast">{toast}</div>}
+
+      <BackToTop />
+
+      <KeyboardShortcuts
+        searchRef={searchRef}
+        onToggleTheme={() => setTheme(theme === "dark" ? "light" : "dark")}
+        onOpenBookmarks={() => setDrawerOpen("bookmarks")}
+        onOpenReadLater={() => setDrawerOpen("readlater")}
+      />
 
       <footer className="footer">
         <div className="footer-inner">
