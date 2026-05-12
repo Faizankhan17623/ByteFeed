@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
+import { Link } from "react-router-dom";
 import useFeed from "./useFeed";
 import useLocalStorage from "./useLocalStorage";
 import useToast from "./useToast";
@@ -11,7 +12,6 @@ import SourcesPage from "./components/SourcesPage";
 import TrendingSection from "./components/TrendingSection";
 import BackToTop from "./components/BackToTop";
 import KeyboardShortcuts from "./components/KeyboardShortcuts";
-import PrivacyPolicy from "./components/PrivacyPolicy";
 import feeds from "./feeds";
 import "./App.css";
 
@@ -32,7 +32,6 @@ export default function App() {
   const [readLater, setReadLater] = useLocalStorage("readLater", []);
   const { toast, showToast } = useToast();
   const searchRef = useRef(null);
-  const [showPrivacy, setShowPrivacy] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -283,17 +282,13 @@ export default function App() {
             <strong style={{ color: "var(--text2)", fontWeight: 800 }}>Faizan Khan</strong>
           </span>
           <div className="footer-links">
-            <button className="footer-link" onClick={() => setShowPrivacy(true)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}>
-              Privacy Policy
-            </button>
+            <Link to="/privacy" className="footer-link">Privacy Policy</Link>
             <a href="https://github.com/Faizankhan17623/ByteFeed" target="_blank" rel="noopener noreferrer" className="footer-link">
               GitHub ↗
             </a>
           </div>
         </div>
       </footer>
-
-      {showPrivacy && <PrivacyPolicy onClose={() => setShowPrivacy(false)} />}
     </div>
   );
 }
