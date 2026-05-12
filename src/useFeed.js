@@ -3,6 +3,7 @@ import axios from "axios";
 import feeds from "./feeds";
 
 const CORS_PROXY = "https://api.rss2json.com/v1/api.json?rss_url=";
+const MIN_LOADING_TIME = 15000; // 15 seconds minimum skeleton display
 
 async function fetchFeed(feed) {
   try {
@@ -34,11 +35,20 @@ export default function useFeed() {
   useEffect(() => {
     async function loadAll() {
       setLoading(true);
+      const startTime = Date.now();
       try {
         const results = await Promise.allSettled(feeds.map(fetchFeed));
         const all = results
           .flatMap((r) => (r.status === "fulfilled" ? r.value : []))
           .sort((a, b) => b.pubDate - a.pubDate);
+
+        // Always show skeleton for at least MIN_LOADING_TIME
+        const elapsed = Date.now() - startTime;
+        const remaining = MIN_LOADING_TIME - elapsed;
+        if (remaining > 0) {
+          await new Promise((res) => setTimeout(res, remaining));
+        }
+
         setPosts(all);
       } catch (e) {
         setError("Failed to load feeds.");
