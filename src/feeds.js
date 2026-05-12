@@ -1,4 +1,5 @@
 const feeds = [
+  // ── Original Sources ──
   {
     name: "Towards Data Science",
     url: "https://towardsdatascience.com/feed",
@@ -49,7 +50,7 @@ const feeds = [
     color: "#ffd21e",
   },
   {
-    name: "Sebastian Raschka (ML)",
+    name: "Sebastian Raschka",
     url: "https://sebastianraschka.com/rss_feed.xml",
     siteUrl: "https://sebastianraschka.com",
     category: "ML",
@@ -70,7 +71,7 @@ const feeds = [
     color: "#e50914",
   },
   {
-    name: "AWS Machine Learning Blog",
+    name: "AWS Machine Learning",
     url: "https://aws.amazon.com/blogs/machine-learning/feed/",
     siteUrl: "https://aws.amazon.com/blogs/machine-learning/",
     category: "ML",
@@ -82,6 +83,78 @@ const feeds = [
     siteUrl: "https://karpathy.github.io",
     category: "AI/ML",
     color: "#818cf8",
+  },
+
+  // ── New Sources ──
+  {
+    name: "MIT Technology Review",
+    url: "https://www.technologyreview.com/feed/",
+    siteUrl: "https://www.technologyreview.com",
+    category: "AI",
+    color: "#c0392b",
+  },
+  {
+    name: "Simon Willison",
+    url: "https://simonwillison.net/atom/everything/",
+    siteUrl: "https://simonwillison.net",
+    category: "AI",
+    color: "#0ea5e9",
+  },
+  {
+    name: "fast.ai Blog",
+    url: "https://www.fast.ai/index.xml",
+    siteUrl: "https://www.fast.ai",
+    category: "ML",
+    color: "#00a86b",
+  },
+  {
+    name: "BAIR Blog",
+    url: "https://bair.berkeley.edu/blog/feed.xml",
+    siteUrl: "https://bair.berkeley.edu/blog",
+    category: "AI",
+    color: "#003262",
+  },
+  {
+    name: "Eugene Yan",
+    url: "https://eugeneyan.com/rss/",
+    siteUrl: "https://eugeneyan.com",
+    category: "ML",
+    color: "#06b6d4",
+  },
+  {
+    name: "Weights & Biases",
+    url: "https://wandb.ai/fully-connected/feed.xml",
+    siteUrl: "https://wandb.ai/fully-connected",
+    category: "ML",
+    color: "#ffcc00",
+  },
+  {
+    name: "The Gradient",
+    url: "https://thegradient.pub/rss/",
+    siteUrl: "https://thegradient.pub",
+    category: "AI/ML",
+    color: "#8b5cf6",
+  },
+  {
+    name: "Hacker News",
+    url: "https://hnrss.org/frontpage",
+    siteUrl: "https://news.ycombinator.com",
+    category: "Software Engineering",
+    color: "#ff6600",
+  },
+  {
+    name: "Google DeepMind",
+    url: "https://deepmind.google/blog/rss.xml",
+    siteUrl: "https://deepmind.google/blog",
+    category: "AI",
+    color: "#4285f4",
+  },
+  {
+    name: "Chip Huyen",
+    url: "https://huyenchip.com/feed.xml",
+    siteUrl: "https://huyenchip.com",
+    category: "ML",
+    color: "#f43f5e",
   },
 ];
 
