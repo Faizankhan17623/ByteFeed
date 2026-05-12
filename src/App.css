@@ -785,3 +785,70 @@ a { text-decoration: none; color: inherit; }
 }
 @media (min-width: 768px) { .shortcuts-hint-btn { display: flex; align-items: center; } }
 .shortcuts-hint-btn:hover { border-color: var(--accent); color: var(--accent2); }
+
+/* ── Privacy Policy Modal ── */
+.privacy-modal {
+  background: var(--bg2); width: 680px; max-width: 95vw;
+  max-height: 90vh; border-radius: 18px;
+  border: 1px solid var(--border2);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  display: flex; flex-direction: column;
+  animation: popIn 0.25s cubic-bezier(0.16,1,0.3,1);
+  overflow: hidden;
+}
+
+.privacy-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--bg2); z-index: 1;
+}
+.privacy-header h2 { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.4px; }
+
+.privacy-body {
+  padding: 24px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 24px;
+}
+
+.privacy-updated { font-size: 12px; color: var(--text3); font-style: italic; }
+
+.privacy-section { display: flex; flex-direction: column; gap: 10px; }
+
+.privacy-section h3 {
+  font-size: 14px; font-weight: 700; color: var(--accent2);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+
+.privacy-section p {
+  font-size: 13px; color: var(--text2); line-height: 1.8;
+}
+
+.privacy-list {
+  list-style: none; display: flex; flex-direction: column; gap: 8px;
+  padding: 0;
+}
+.privacy-list li {
+  font-size: 13px; color: var(--text2); line-height: 1.7;
+  padding: 8px 12px; background: var(--bg3);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding-left: 32px; position: relative;
+}
+.privacy-list li::before {
+  content: "✓"; position: absolute; left: 12px;
+  color: var(--success); font-weight: 700; font-size: 12px;
+}
+
+.privacy-contact { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.privacy-contact h3 { border-bottom-color: rgba(124,106,247,0.2); }
+
+.privacy-email {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 700; color: var(--accent2);
+  background: var(--glow); border: 1px solid rgba(124,106,247,0.3);
+  padding: 10px 18px; border-radius: 10px;
+  transition: all 0.2s; text-decoration: none;
+}
+.privacy-email:hover { background: var(--accent); color: #fff; border-color: transparent; }
+
+.privacy-response { font-size: 12px; color: var(--text3); font-style: italic; margin-top: 4px; }
