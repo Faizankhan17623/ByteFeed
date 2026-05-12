@@ -1,14 +1,29 @@
-export default function PrivacyPolicy({ onClose }) {
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+export default function PrivacyPolicy() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
+
   return (
-    <div className="drawer-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="privacy-modal">
-        <div className="privacy-header">
-          <h2>Privacy Policy</h2>
-          <button className="drawer-close" onClick={onClose}>✕</button>
+    <div className="privacy-page">
+      <div className="privacy-page-inner">
+
+        {/* Back button */}
+        <button className="privacy-back-btn" onClick={() => navigate("/")}>
+          ← Back to ByteFeed
+        </button>
+
+        <div className="privacy-page-header">
+          <div className="privacy-page-icon">🔒</div>
+          <h1>Privacy Policy</h1>
+          <p className="privacy-updated">Last updated: May 2026</p>
         </div>
 
-        <div className="privacy-body">
-          <p className="privacy-updated">Last updated: May 2026</p>
+        <div className="privacy-page-body">
 
           <section className="privacy-section">
             <h3>About ByteFeed</h3>
@@ -86,7 +101,18 @@ export default function PrivacyPolicy({ onClose }) {
             </a>
             <p className="privacy-response">We aim to respond to all queries within 48 hours.</p>
           </section>
+
         </div>
+
+        <div className="privacy-page-footer">
+          <button className="privacy-back-btn" onClick={() => navigate("/")}>
+            ← Back to ByteFeed
+          </button>
+          <span style={{ fontSize: 12, color: "var(--text3)" }}>
+            Made with ♥ by <strong style={{ color: "var(--text2)" }}>Faizan Khan</strong>
+          </span>
+        </div>
+
       </div>
     </div>
   );
