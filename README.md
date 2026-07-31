@@ -84,7 +84,7 @@ It fetches posts in real time via public RSS feeds and displays them in a clean,
 
 | Tool | Purpose |
 |---|---|
-| **React 18** | UI framework |
+| **React 19** | UI framework |
 | **Vite** | Build tool & dev server |
 | **React Router** | Client-side routing |
 | **Axios** | HTTP requests |
