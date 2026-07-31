@@ -92,6 +92,8 @@ It fetches posts in real time via public RSS feeds and displays them in a clean,
 | **canvas-confetti** | First bookmark celebration |
 | **Vercel** | Hosting & deployment |
 
+> **Note:** the project scaffold includes TypeScript config (`tsconfig.json`), but the app itself is written entirely in JS/JSX — the entry point is `src/main.jsx`.
+
 ---
 
 ## 🏃 Run Locally
