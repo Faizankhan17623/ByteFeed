@@ -2,7 +2,7 @@
 
 > A beautiful, real-time blog aggregator for AI, ML & Software Engineering — built with React + Vite.
 
-**Live Site:** [bytefeed.store](https://bytefeed.store)
+**Live Site:** [byte-feed-two.vercel.app](https://byte-feed-two.vercel.app)
 
 ---
 
@@ -181,7 +181,7 @@ src/
 
 ByteFeed does not collect any personal data. All preferences (bookmarks, theme, read later) are stored in your browser's local storage only and never leave your device.
 
-Read the full [Privacy Policy](https://bytefeed.store/privacy).
+Read the full [Privacy Policy](https://byte-feed-two.vercel.app/privacy).
 
 ---
 
