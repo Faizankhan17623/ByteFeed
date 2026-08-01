@@ -41,7 +41,7 @@ export default function Drawer({ onClose, bookmarks, readLater, onRemoveBookmark
                     {post.source}
                   </span>
                   <span className="drawer-item-source">
-                    {post.pubDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    {new Date(post.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </span>
                 </div>
                 <div className="drawer-item-actions">
